@@ -4,11 +4,10 @@
 
 module Field where
 
-import           Data.List
-import           Data.Maybe   (fromJust)
 import           GHC.TypeLits
+import           Math.NumberTheory.GCD
+import           Math.NumberTheory.Primes
 
-import           Utils        (eea, eea', isPrime)
 
 class (Eq k, Fractional k) => Field k where
   fRecip :: k -> Maybe k
@@ -16,10 +15,11 @@ class (Eq k, Fractional k) => Field k where
 
 newtype F (p :: Nat) = F Integer deriving (Eq, Ord)
 
+
 mkF :: KnownNat p => Integer -> F p
 mkF n
   | isPrime $ natVal p = p
-  | otherwise = error "Required that p is prime."
+  | otherwise          = error "Required that p is prime."
   where
     p = F $ n `mod` natVal p
 
@@ -43,8 +43,8 @@ instance KnownNat p => Field (F p) where
     | isPrime p           = Just $ mkF s
     | otherwise           = Nothing
     where
-      (_, s, _) = eea' m p
-      p = natVal a
+      (_, s, _) = extendedGCD m p
+      p         = natVal a
   order a@(F m) = natVal a
 
 instance KnownNat p => Fractional (F p) where
@@ -53,9 +53,9 @@ instance KnownNat p => Fractional (F p) where
     | isPrime p           = mkF s
     | otherwise           = undefined
     where
-      (_, s, _) = eea' m p
-      p = natVal a
-  F m / F n = F m * recip (F n)
+      (_, s, _) = extendedGCD m p
+      p         = natVal a
+  F m / F n    = F m * recip (F n)
   fromRational = undefined
 
 
