@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 287f74a708f2ad09400ae3c79b5625bc8d2d9a893692bfa78621c68ae35f49a1
+-- hash: e7b24f8d83154dc4f82e5c385544a990da395084e66b2fd590adcb97ab1462d1
 
 name:           elliptic-curve
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
   exposed-modules:
       EllipticCurve
       EllipticCurve.Field
+      EllipticCurve.TypeFrac
       EllipticCurve.Utils
   other-modules:
       Paths_elliptic_curve
