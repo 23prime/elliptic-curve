@@ -2,7 +2,7 @@
 {-# LANGUAGE KindSignatures      #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Field where
+module EllipticCurve.Field where
 
 import           GHC.TypeLits
 import           Math.NumberTheory.GCD

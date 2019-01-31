@@ -1,6 +1,4 @@
 .stack-work/
 ellipse.cabal
 *~
-
-Polynomial.hs
-Resultant.hs
+src/

@@ -1,6 +1,6 @@
 {-# LANGUAGE MonomorphismRestriction #-}
 
-module Utils where
+module EllipticCurve.Utils where
 
 import           Data.List
 import           System.Random

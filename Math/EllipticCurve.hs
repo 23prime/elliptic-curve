@@ -4,15 +4,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeOperators       #-}
 
-module Ellipse where
+module EllipticCurve where
 
 import           Data.List
 import           Data.Proxy
---import           Data.Singletons
---import           Data.Singletons.TH
 import           GHC.TypeLits
 
-import           Field
+import           EllipticCurve.Field
 
 -----------------
 -- Define Frac --
@@ -47,8 +45,8 @@ instance Eq a => Eq (Ellipse a p) where
   Infty == Infty = True
 
 instance Ord a => Ord (Ellipse a p) where
-  E p1  `compare` E p2 = p1 `compare` p2
-  Infty `compare` E _ = LT
+  E p1  `compare` E p2  = p1 `compare` p2
+  Infty `compare` E _   = LT
   E _   `compare` Infty = GT
   Infty `compare` Infty = EQ
 

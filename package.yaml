@@ -1,6 +1,6 @@
-name:                ellipse
+name:                elliptic-curve
 version:             0.1.0.0
-github:              "23prime/ellipse"
+github:              "23prime/elliptic-curve"
 license:             BSD3
 author:              "Okkey"
 maintainer:          "a23b23c23d23e@gmail.com"
@@ -9,10 +9,10 @@ copyright:           "2019 Okkey"
 extra-source-files:
 - README.md
 
-synopsis:            Elliptic curve library
+synopsis:            Elliptic curve library for Haskell
 category:            Math
 
-description:         Please see the README on GitHub at <https://github.com/githubuser/ellipse#readme>
+description:         Please see the README on GitHub at <https://github.com/githubuser/elliptic-curve#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -22,7 +22,7 @@ dependencies:
 - arithmoi
 
 library:
-  source-dirs: src
+  source-dirs: Math
 
 tests:
   ellipse-test:
