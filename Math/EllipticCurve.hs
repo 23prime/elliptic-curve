@@ -5,7 +5,10 @@
 
 module EllipticCurve where
 
+import           Data.Ratio
+
 import           EllipticCurve.Field
+import           EllipticCurve.Group
 import           EllipticCurve.TypeFrac
 
 --------------------
@@ -67,13 +70,18 @@ instance (KnownFrac p, Fractional a, Eq a) => Num (Ellipse a p) where
   signum      = undefined
   fromInteger = undefined
 
+instance (KnownFrac p, Fractional a, Eq a) => Group (Ellipse a p) where
+  idElem  = Infty
+  inverse = negate
+  order e =  O $ fromIntegral $ length $ generateEs e
+
 
 ---------------------------
 -- Functions for Ellipse --
 ---------------------------
 -- Make a in "y^2 = x^3 + a x + b"
-mkCoeff :: (KnownFrac p, Fractional a) => Ellipse a p -> a
-mkCoeff = fracVal
+coeff :: (KnownFrac p, Fractional a) => Ellipse a p -> a
+coeff = fracVal
 
 -- Addition of Ellipse
 addEllipse :: (KnownFrac p, Eq a, Fractional a) => Ellipse a p -> Ellipse a p -> Ellipse a p
@@ -85,41 +93,46 @@ addEllipse e@(E (x1, y1)) (E (x2, y2))
   where
     diffs = (x2 - x1, y2 - y1)
     s     = case diffs of
-              (0, 0) -> (3 * x1 ^ 2 + mkCoeff e) / (2 * y1)
+              (0, 0) -> (3 * x1 ^ 2 + coeff e) / (2 * y1)
               _      -> snd diffs / fst diffs
     x     = s ^ 2 - x1 - x2
     y     = s * (x1 - x) - y1
 
 -- Scalar multiplication of Ellipse
+-- Want to make it faster by the binary-method
 scalarMul :: (KnownFrac p, Eq a, Fractional a) => Int -> Ellipse a p -> Ellipse a p
 scalarMul n = foldl (+) Infty . replicate n
+
+n *. e = scalarMul n e
 
 -- Generate [Point] with Addition from a Point in Ellipse
 generateEs :: (KnownFrac p, Eq a, Fractional a) => Ellipse a p -> [Ellipse a p]
 generateEs Infty = [Infty]
-generateEs e     = make e e [Infty]
+generateEs e     = gen e e [Infty]
   where
-    make e0 e es
-      | e `elem` es = es
-      | otherwise   = make e0 (e + e0) $ es ++ [e]
+    gen _ Infty es = es
+    gen e0 e es    = gen e0 (e + e0) (es ++ [e])
 
--- Like fmap
-emap :: (Fractional a, Fractional b) => (a -> b) -> Ellipse a p -> Ellipse b p
-emap f (E (x, y)) = E (f x, f y)
+height :: Rational -> Integer
+height r = max (abs $ numerator r) (abs $ denominator r)
+
+height' :: Ellipse Rational p -> Integer
+height' (E (x, y)) = height x
+
 
 -------------
 -- Samples --
 -------------
 -- y^2 = x^3 + x + 1 in F_5
-s0 = E (0, 1) :: Ellipse (F 5) (1 :/: 1)
-s1 = E (4, 2) :: Ellipse (F 5) (1 :/: 1)
-s2 = E (2, 1) :: Ellipse (F 5) (1 :/: 1)
-s3 = E (3, 4) :: Ellipse (F 5) (1 :/: 1)
-s4 = E (3, 1) :: Ellipse (F 5) (1 :/: 1)
-s5 = E (2, 4) :: Ellipse (F 5) (1 :/: 1)
-s6 = E (4, 3) :: Ellipse (F 5) (1 :/: 1)
-s7 = E (0, 4) :: Ellipse (F 5) (1 :/: 1)
-ss = [Infty, s0, s1, s2, s3, s4, s5, s6, s7]
+s1 = E (0, 1) :: Ellipse (F 5) (1 :/: 1)
+s2 = E (4, 2) :: Ellipse (F 5) (1 :/: 1)
+s3 = E (2, 1) :: Ellipse (F 5) (1 :/: 1)
+s4 = E (3, 4) :: Ellipse (F 5) (1 :/: 1)
+s5 = E (3, 1) :: Ellipse (F 5) (1 :/: 1)
+s6 = E (2, 4) :: Ellipse (F 5) (1 :/: 1)
+s7 = E (4, 3) :: Ellipse (F 5) (1 :/: 1)
+s8 = E (0, 4) :: Ellipse (F 5) (1 :/: 1)
+ss = [Infty, s1, s2, s3, s4, s5, s6, s7, s8]
 
 -- >s0 + s1
 -- (2, 1)
@@ -131,7 +144,12 @@ ss = [Infty, s0, s1, s2, s3, s4, s5, s6, s7]
 -- True
 
 -- y^2 = x^3 + 4 x in Q
-t0 = E (0, 0)  :: Ellipse Rational (4 :/: 1)
-t1 = E (-2, 0) :: Ellipse Rational (4 :/: 1)
-t2 = E (2, 0)  :: Ellipse Rational (4 :/: 1)
-ts = [Infty, t0, t1, t2]
+t1 = E (0, 0)  :: Ellipse Rational (4 :/: 1)
+t2 = E (-2, 0) :: Ellipse Rational (4 :/: 1)
+t3 = E (2, 0)  :: Ellipse Rational (4 :/: 1)
+ts = [Infty, t1, t2, t3]
+
+-- y^2 = x^3 + 9
+u1 = E (0, 3)  :: Ellipse Rational (0 :/: 1)
+u2 = E (0, -3) :: Ellipse Rational (0 :/: 1)
+u3 = E (6, 15) :: Ellipse Rational (0 :/: 1)

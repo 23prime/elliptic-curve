@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e7b24f8d83154dc4f82e5c385544a990da395084e66b2fd590adcb97ab1462d1
+-- hash: c6a092436ab8e50e74bac69cfb3daa07b8c672573623c8e8194c1e4019ccde55
 
 name:           elliptic-curve
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
   exposed-modules:
       EllipticCurve
       EllipticCurve.Field
+      EllipticCurve.Group
       EllipticCurve.TypeFrac
       EllipticCurve.Utils
   other-modules:
@@ -42,6 +43,7 @@ library
     , hmatrix
     , random
     , time
+    , vector
   default-language: Haskell2010
 
 test-suite ellipse-test
@@ -59,4 +61,5 @@ test-suite ellipse-test
     , hmatrix
     , random
     , time
+    , vector
   default-language: Haskell2010
