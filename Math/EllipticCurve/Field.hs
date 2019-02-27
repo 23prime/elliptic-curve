@@ -11,7 +11,7 @@ import           Math.NumberTheory.Primes
 
 class (Eq k, Fractional k) => Field k where
   fRecip :: k -> Maybe k
-  order  :: k -> Integer
+  char   :: k -> Integer
 
 newtype F (p :: Nat) = F Integer deriving (Eq, Ord)
 
@@ -45,7 +45,7 @@ instance KnownNat p => Field (F p) where
     where
       (_, s, _) = extendedGCD m p
       p         = natVal a
-  order a@(F m) = natVal a
+  char a@(F m)  = natVal a
 
 instance KnownNat p => Fractional (F p) where
   recip a@(F m)
